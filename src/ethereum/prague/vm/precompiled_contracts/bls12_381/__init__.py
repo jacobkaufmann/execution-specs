@@ -11,6 +11,7 @@ Introduction
 
 Precompile for BLS12-381 curve operations.
 """
+
 from typing import Tuple, Union
 
 from ethereum_types.bytes import Bytes

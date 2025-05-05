@@ -169,6 +169,14 @@ class Ops(enum.Enum):
     DUP14 = 0x8D
     DUP15 = 0x8E
     DUP16 = 0x8F
+    DUP17 = 0xB9
+    DUP18 = 0xBA
+    DUP19 = 0xBB
+    DUP20 = 0xBC
+    DUP21 = 0xBD
+    DUP22 = 0xBE
+    DUP23 = 0xBF
+    DUP24 = 0xC0
 
     # Swap operations
     SWAP1 = 0x90
@@ -187,6 +195,18 @@ class Ops(enum.Enum):
     SWAP14 = 0x9D
     SWAP15 = 0x9E
     SWAP16 = 0x9F
+    SWAP17 = 0xB0
+    SWAP18 = 0xB1
+    SWAP19 = 0xB2
+    SWAP20 = 0xB3
+    SWAP21 = 0xB4
+    SWAP22 = 0xB5
+    SWAP23 = 0xB6
+    SWAP24 = 0xB7
+
+    SWAPN = 0xC0
+    DUPN = 0xC1
+    EXCHANGE = 0xC2
 
     # Memory Operations
     MLOAD = 0x51
@@ -333,6 +353,14 @@ op_implementation: Dict[Ops, Callable] = {
     Ops.DUP14: stack_instructions.dup14,
     Ops.DUP15: stack_instructions.dup15,
     Ops.DUP16: stack_instructions.dup16,
+    Ops.DUP17: stack_instructions.dup17,
+    Ops.DUP18: stack_instructions.dup18,
+    Ops.DUP19: stack_instructions.dup19,
+    Ops.DUP20: stack_instructions.dup20,
+    Ops.DUP21: stack_instructions.dup21,
+    Ops.DUP22: stack_instructions.dup22,
+    Ops.DUP23: stack_instructions.dup23,
+    Ops.DUP24: stack_instructions.dup24,
     Ops.SWAP1: stack_instructions.swap1,
     Ops.SWAP2: stack_instructions.swap2,
     Ops.SWAP3: stack_instructions.swap3,
@@ -349,6 +377,17 @@ op_implementation: Dict[Ops, Callable] = {
     Ops.SWAP14: stack_instructions.swap14,
     Ops.SWAP15: stack_instructions.swap15,
     Ops.SWAP16: stack_instructions.swap16,
+    Ops.SWAP17: stack_instructions.swap17,
+    Ops.SWAP18: stack_instructions.swap18,
+    Ops.SWAP19: stack_instructions.swap19,
+    Ops.SWAP20: stack_instructions.swap20,
+    Ops.SWAP21: stack_instructions.swap21,
+    Ops.SWAP22: stack_instructions.swap22,
+    Ops.SWAP23: stack_instructions.swap23,
+    Ops.SWAP24: stack_instructions.swap24,
+    Ops.SWAPN: stack_instructions.swapn,
+    Ops.DUPN: stack_instructions.dupn,
+    Ops.EXCHANGE: stack_instructions.exchange,
     Ops.LOG0: log_instructions.log0,
     Ops.LOG1: log_instructions.log1,
     Ops.LOG2: log_instructions.log2,

@@ -11,6 +11,7 @@ Introduction
 
 Implementation of the BLS12 381 pairing pre-compile.
 """
+
 from ethereum_types.numeric import U256, Uint
 from py_ecc.bls12_381.bls12_381_curve import FQ12, curve_order, multiply
 from py_ecc.bls12_381.bls12_381_pairing import pairing

@@ -11,6 +11,7 @@ Introduction
 
 Implementation of pre-compiles in G1 (curve over base prime field).
 """
+
 from ethereum_types.numeric import U256, Uint
 from py_ecc.bls12_381.bls12_381_curve import add, multiply
 from py_ecc.bls.hash_to_curve import clear_cofactor_G1, map_to_curve_G1

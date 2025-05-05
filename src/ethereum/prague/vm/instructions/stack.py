@@ -17,9 +17,10 @@ from functools import partial
 from ethereum_types.numeric import U256, Uint
 
 from .. import Evm, stack
-from ..exceptions import StackUnderflowError
+from ..exceptions import OutOfGasError, StackUnderflowError
 from ..gas import GAS_BASE, GAS_VERY_LOW, charge_gas
 from ..memory import buffer_read
+from . import Ops
 
 
 def pop(evm: Evm) -> None:
@@ -106,6 +107,36 @@ def dup_n(evm: Evm, item_number: int) -> None:
     evm.pc += Uint(1)
 
 
+def dupn(evm: Evm) -> None:
+    """
+    Duplicate the Nth stack item (from top of the stack) to the top of stack.
+
+    i.e. DUPN
+    """
+    # STACK
+    item_number = stack.pop(evm.stack)
+
+    # GAS
+    charge_gas(evm, GAS_VERY_LOW)
+    if item_number >= len(evm.stack):
+        raise StackUnderflowError
+
+    # ARGUMENT `N`
+    if item_number == 0:
+        raise OutOfGasError
+    if evm.code[evm.pc - 2] != Ops.PUSH1:
+        raise OutOfGasError
+    if evm.pc - 2 not in evm.valid_jump_destinations:
+        raise OutOfGasError
+
+    # DUPLICATE
+    data_to_duplicate = evm.stack[len(evm.stack) - 1 - item_number]
+    stack.push(evm.stack, data_to_duplicate)
+
+    # PROGRAM COUNTER
+    evm.pc += Uint(1)
+
+
 def swap_n(evm: Evm, item_number: int) -> None:
     """
     Swap the top and the `item_number` element of the stack, where
@@ -134,6 +165,75 @@ def swap_n(evm: Evm, item_number: int) -> None:
     evm.stack[-1], evm.stack[-1 - item_number] = (
         evm.stack[-1 - item_number],
         evm.stack[-1],
+    )
+
+    # PROGRAM COUNTER
+    evm.pc += Uint(1)
+
+
+def swapn(evm: Evm) -> None:
+    """
+    Swap the top and the Nth element of the stack, where the top of the stack
+    is position zero.
+
+    i.e. SWAPN
+    """
+    # STACK
+    item_number = stack.pop(evm.stack)
+
+    # GAS
+    charge_gas(evm, GAS_VERY_LOW)
+    if item_number >= len(evm.stack):
+        raise StackUnderflowError
+
+    # ARGUMENT `N`
+    if item_number == 0:
+        raise OutOfGasError
+    if evm.code[evm.pc - 2] != Ops.PUSH1:
+        raise OutOfGasError
+    # TODO: check that the PUSH1 is not in the data segment of a prior PUSH
+
+    # SWAP
+    evm.stack[-1], evm.stack[-1 - item_number] = (
+        evm.stack[-1 - item_number],
+        evm.stack[-1],
+    )
+
+    # PROGRAM COUNTER
+    evm.pc += Uint(1)
+
+
+def exchange(evm: Evm) -> None:
+    """
+    Swap the Nth and the Mth element of the stack, where the top of the stack
+    is position zero, and N and M are given by the element on the top of the
+    stack.
+    """
+    # STACK
+    x = stack.pop(evm.stack)
+    n = x >> 4
+    m = x & 0x0F
+
+    # GAS
+    charge_gas(evm, GAS_VERY_LOW)
+    if n >= len(evm.stack):
+        raise StackUnderflowError
+    if m >= len(evm.stack):
+        raise StackUnderflowError
+
+    # ARGUMENT `X`
+    if n == 0:
+        raise OutOfGasError
+    if m == 0:
+        raise OutOfGasError
+    if evm.code[evm.pc - 3] != Ops.PUSH2:
+        raise OutOfGasError
+    # TODO: check that the PUSH2 is not in the data segment of a prior PUSH
+
+    # SWAP
+    evm.stack[n - 1], evm.stack[m - 1] = (
+        evm.stack[m - 1],
+        evm.stack[n - 1],
     )
 
     # PROGRAM COUNTER
@@ -190,6 +290,14 @@ dup13 = partial(dup_n, item_number=12)
 dup14 = partial(dup_n, item_number=13)
 dup15 = partial(dup_n, item_number=14)
 dup16 = partial(dup_n, item_number=15)
+dup17 = partial(dup_n, item_number=17)
+dup18 = partial(dup_n, item_number=18)
+dup19 = partial(dup_n, item_number=19)
+dup20 = partial(dup_n, item_number=20)
+dup21 = partial(dup_n, item_number=21)
+dup22 = partial(dup_n, item_number=22)
+dup23 = partial(dup_n, item_number=23)
+dup24 = partial(dup_n, item_number=24)
 
 swap1 = partial(swap_n, item_number=1)
 swap2 = partial(swap_n, item_number=2)
@@ -207,3 +315,11 @@ swap13 = partial(swap_n, item_number=13)
 swap14 = partial(swap_n, item_number=14)
 swap15 = partial(swap_n, item_number=15)
 swap16 = partial(swap_n, item_number=16)
+swap17 = partial(swap_n, item_number=17)
+swap18 = partial(swap_n, item_number=18)
+swap19 = partial(swap_n, item_number=19)
+swap20 = partial(swap_n, item_number=20)
+swap21 = partial(swap_n, item_number=21)
+swap22 = partial(swap_n, item_number=22)
+swap23 = partial(swap_n, item_number=23)
+swap24 = partial(swap_n, item_number=24)
