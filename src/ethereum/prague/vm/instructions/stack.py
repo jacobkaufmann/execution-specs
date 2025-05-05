@@ -126,8 +126,7 @@ def dupn(evm: Evm) -> None:
         raise OutOfGasError
     if evm.code[evm.pc - 2] != Ops.PUSH1:
         raise OutOfGasError
-    if evm.pc - 2 not in evm.valid_jump_destinations:
-        raise OutOfGasError
+    # TODO: check that the PUSH1 is not in the data segment of a prior PUSH
 
     # DUPLICATE
     data_to_duplicate = evm.stack[len(evm.stack) - 1 - item_number]
