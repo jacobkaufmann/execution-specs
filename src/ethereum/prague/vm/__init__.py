@@ -146,6 +146,7 @@ class Evm:
     code: Bytes
     gas_left: Uint
     valid_jump_destinations: Set[Uint]
+    push_data_locations: Set[Uint]
     logs: Tuple[Log, ...]
     refund_counter: int
     running: bool

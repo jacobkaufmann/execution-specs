@@ -126,7 +126,8 @@ def dupn(evm: Evm) -> None:
         raise OutOfGasError
     if evm.code[evm.pc - 2] != Ops.PUSH1:
         raise OutOfGasError
-    # TODO: check that the PUSH1 is not in the data segment of a prior PUSH
+    if evm.code[evm.pc - 2] in evm.push_data_locations:
+        raise OutOfGasError
 
     # DUPLICATE
     data_to_duplicate = evm.stack[len(evm.stack) - 1 - item_number]
@@ -190,7 +191,8 @@ def swapn(evm: Evm) -> None:
         raise OutOfGasError
     if evm.code[evm.pc - 2] != Ops.PUSH1:
         raise OutOfGasError
-    # TODO: check that the PUSH1 is not in the data segment of a prior PUSH
+    if evm.code[evm.pc - 2] in evm.push_data_locations:
+        raise OutOfGasError
 
     # SWAP
     evm.stack[-1], evm.stack[-1 - item_number] = (
@@ -227,7 +229,8 @@ def exchange(evm: Evm) -> None:
         raise OutOfGasError
     if evm.code[evm.pc - 3] != Ops.PUSH2:
         raise OutOfGasError
-    # TODO: check that the PUSH2 is not in the data segment of a prior PUSH
+    if evm.code[evm.pc - 3] in evm.push_data_locations:
+        raise OutOfGasError
 
     # SWAP
     evm.stack[n - 1], evm.stack[m - 1] = (

@@ -59,7 +59,7 @@ from .exceptions import (
     StackDepthLimitError,
 )
 from .instructions import Ops, op_implementation
-from .runtime import get_valid_jump_destinations
+from .runtime import get_push_data_locations, get_valid_jump_destinations
 
 STACK_DEPTH_LIMIT = Uint(1024)
 MAX_CODE_SIZE = 0x6000
@@ -265,6 +265,7 @@ def execute_code(message: Message) -> Evm:
     """
     code = message.code
     valid_jump_destinations = get_valid_jump_destinations(code)
+    push_data_locations = get_push_data_locations(code)
 
     evm = Evm(
         pc=Uint(0),
@@ -273,6 +274,7 @@ def execute_code(message: Message) -> Evm:
         code=code,
         gas_left=message.gas,
         valid_jump_destinations=valid_jump_destinations,
+        push_data_locations=push_data_locations,
         logs=(),
         refund_counter=0,
         running=True,

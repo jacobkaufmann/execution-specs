@@ -67,3 +67,51 @@ def get_valid_jump_destinations(code: Bytes) -> Set[Uint]:
         pc += Uint(1)
 
     return valid_jump_destinations
+
+
+def get_push_data_locations(code: Bytes) -> Set[Uint]:
+    """
+    Analyze the evm code to obtain the set of locations of data corresponding
+    to `PUSH-N` opcodes.
+
+    Note - Locations are 0-indexed.
+
+    Parameters
+    ----------
+    code :
+        The EVM code which is to be executed.
+
+    Returns
+    -------
+    push_data_locations: `Set[Uint]`
+        The set of push data locations in the code.
+    """
+    push_data_locations = set()
+    pc = Uint(0)
+
+    while pc < ulen(code):
+        try:
+            current_opcode = Ops(code[pc])
+        except ValueError:
+            # Skip invalid opcodes. Nevertheless, such invalid opcodes would be
+            # caught and raised when the interpreter runs.
+            pc += Uint(1)
+            continue
+
+        if Ops.PUSH1.value <= current_opcode.value <= Ops.PUSH32.value:
+            # If PUSH-N opcodes are encountered, skip the current opcode and
+            # add the trailing data segment corresponding to the PUSH-N
+            # opcodes to the set of push data locations.
+            pc += Uint(1)
+            push_data_size = current_opcode.value - Ops.PUSH1.value + 1
+            end = pc + Uint(push_data_size)
+            while pc < end:
+                push_data_locations.add(pc)
+                pc += Uint(1)
+
+            # Do not increment the program counter again.
+            continue
+
+        pc += Uint(1)
+
+    return push_data_locations
