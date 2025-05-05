@@ -169,14 +169,6 @@ class Ops(enum.Enum):
     DUP14 = 0x8D
     DUP15 = 0x8E
     DUP16 = 0x8F
-    DUP17 = 0xB9
-    DUP18 = 0xBA
-    DUP19 = 0xBB
-    DUP20 = 0xBC
-    DUP21 = 0xBD
-    DUP22 = 0xBE
-    DUP23 = 0xBF
-    DUP24 = 0xC0
 
     # Swap operations
     SWAP1 = 0x90
@@ -195,6 +187,8 @@ class Ops(enum.Enum):
     SWAP14 = 0x9D
     SWAP15 = 0x9E
     SWAP16 = 0x9F
+
+    # EIP-7912 operations
     SWAP17 = 0xB0
     SWAP18 = 0xB1
     SWAP19 = 0xB2
@@ -203,7 +197,14 @@ class Ops(enum.Enum):
     SWAP22 = 0xB5
     SWAP23 = 0xB6
     SWAP24 = 0xB7
-
+    DUP17 = 0xB8
+    DUP18 = 0xB9
+    DUP19 = 0xBA
+    DUP20 = 0xBB
+    DUP21 = 0xBC
+    DUP22 = 0xBD
+    DUP23 = 0xBE
+    DUP24 = 0xBF
     SWAPN = 0xC0
     DUPN = 0xC1
     EXCHANGE = 0xC2
